@@ -1,0 +1,10 @@
+@import "../styles/mixins";
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+
+  @include max-576 {
+    justify-content: center;
+  }
+}
