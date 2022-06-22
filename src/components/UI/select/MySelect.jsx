@@ -5,9 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const MySelect = ({options, defaultValue, value, onChange,...props}) => {
+const MySelect = ({options, defaultValue, value, onChange}) => {
     return (
-        <FormControl {...props} sx={{m: 1, minWidth: 120}} size="small">
+        <FormControl sx={{m: 1, minWidth: 120}} size="small">
             <InputLabel id="my-select">{defaultValue}</InputLabel>
             <Select
                 labelId="my-select"

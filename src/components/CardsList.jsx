@@ -2,15 +2,32 @@ import React from 'react';
 import CardItem from "./CardItem";
 import classes from './CardsList.module.scss';
 
-const CardsList = ({cards}) => {
+const CardsList = ({cards, data}) => {
 
     return (
         <div className={classes.cards}>{
-            cards.map(card =>
-                <CardItem key={card.accessoryId} imgURL={card.accessoryPhoto} title={card.accessoryName}
-                          description={card.accessoryDescription} price1={card.accessoryPriceProductDiscount}
-                          price2={card.accessoryPriceProduct}
-                          discount={Math.round(card.accessoryPriceProductDiscount/card.accessoryPriceProduct*100)}/>
+            data.map(({
+                          accessoryId,
+                          accessoryPhoto,
+                          accessoryName,
+                          accessoryDescription,
+                          accessoryPriceProductDiscount,
+                          accessoryPriceProduct,
+                          accessoryPriceWork,
+                          accessoryPriceWorkDiscount
+                      }) =>
+                <CardItem
+                    key={accessoryId}
+                    id={accessoryId}
+                    imgURL={accessoryPhoto}
+                    title={accessoryName}
+                    description={accessoryDescription}
+                    priceDiscount={accessoryPriceProductDiscount}
+                    priceProduct={accessoryPriceProduct}
+                    priceWork ={accessoryPriceWork}
+                    priceDiscountWork={accessoryPriceWorkDiscount}
+                    discount={accessoryPriceProduct.replace(/\s/g, '')/accessoryPriceProductDiscount.replace(/\s/g, '')*100}
+                />
             )
         }
         </div>

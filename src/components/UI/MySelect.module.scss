@@ -5,14 +5,22 @@
   width: 100%;
   min-width: 250px;
   background-color: #ffffff;
+  max-width: unset;
 
 
   &:focus-visible {
     outline: none;
   }
+  //
+  //@include max-576 {
+  //  width: 500px;
+  //  max-width: 100%;
+  //}
 
-  @include max-576 {
-    width: 500px;
-    max-width: 100%;
+  @media (max-width: 500px){
+    .select{
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
   }
 }

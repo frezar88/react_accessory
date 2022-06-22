@@ -1,20 +1,19 @@
-@import "../../../src/styles/variables";
+@import "../../../styles/variables";
 
 .button {
-  border-radius:10px;
-  //position:absolute;
-  //bottom:10%;
-  //right:10%;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 36px;
-  padding: 20px 24px;
+  // width: 300px;
+  padding: 0 24px;
+
   width: fit-content;
   background-color: $color-primary;
   font-weight: 700;
   text-align: left;
-  //text-transform: uppercase;
+  text-transform: uppercase;
 
   transition: 0.5s;
 
@@ -33,15 +32,5 @@
       border-color: transparent;
       background-color: transparent;
     }
-  }
-}
-
-@media (max-width: 768px) {
-  .button{
-    width: 50%;
-    position:fixed;
-    bottom:5%;
-    right:25%;
-    z-index: 111111;
   }
 }

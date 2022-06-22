@@ -1,116 +1,109 @@
 import './styles/App.scss';
 import CardsList from "./components/CardsList";
+import React, {useEffect, useState} from "react";
+import {getAccessories} from "./axios/requests";
+import MyButton from "./components/UI/MyButton";
 import MySelect from "./components/UI/MySelect";
-import {useEffect, useState} from "react";
+import MyModal from "./components/UI/MyModal/MyModal";
 
 
 function App() {
-    const [cards, setCards] = useState([
-        {
-            brandId: "00011123",
-            brandName: "Renault",
-            modelId: "00234232",
-            modelName: "Sandero",
-            accessoryId: "0031203",
-            accessoryName: "Коврики в салон, велюровые, черные, 4 шт.",
-            accessoryPhoto: "https://cdn.kodixauto.ru/media/resized_image/webp/5dea1939019a2500018b7b62/768/0",
-            accessoryDescription: "Какое-то описание акса",
-            accessoryPriceWork: 470,
-            accessoryPriceWorkDiscount: 450,
-            accessoryPriceProduct: 500,
-            accessoryPriceProductDiscount: 400
-        },
-        {
-            brandId: "00011123",
-            brandName: "Renault",
-            modelId: "00234232",
-            modelName: "Duster",
-            accessoryId: "0031203",
-            accessoryName: "16\" Легкосплавный диск Laser, серый",
-            accessoryPhoto: "https://cdn.kodixauto.ru/media/resized_image/webp/5dc560bd3ef1430001d1c942/768/0",
-            accessoryDescription: "Какое-то описание акса",
-            accessoryPriceWork: 170,
-            accessoryPriceWorkDiscount: 150,
-            accessoryPriceProduct: 400,
-            accessoryPriceProductDiscount: 100
-        },
-        {
-            brandId: "00011123",
-            brandName: "Renault",
-            modelId: "00234232",
-            modelName: "Logan",
-            accessoryId: "0031203",
-            accessoryName: "Дефлекторы окон",
-            accessoryPhoto: "https://cdn.kodixauto.ru/media/resized_image/webp/5dc562a03ef1430001d1c943/768/0",
-            accessoryDescription: "Какое-то описание акса",
-            accessoryPriceWork: 270,
-            accessoryPriceWorkDiscount: 250,
-            accessoryPriceProduct: 250,
-            accessoryPriceProductDiscount: 200
-        },
-    ]);
-    const [brands, setBrands] = useState([]);
-    const [models, setModels] = useState([]);
-
-    useEffect(() => {
-        const brandsSet = new Set();
-        const modelsSet = new Set();
-
-        cards.forEach(({brandName, modelName}) => {
-            brandsSet.add(brandName);
-            modelsSet.add(modelName);
-        });
-        setBrands([...brandsSet].map((brand) => {
-            return {value: brand, name: brand};
-        }));
-        setModels([...modelsSet].map((brand) => {
-            return {value: brand, name: brand};
-        }));
-    }, []);
-
-    const  [cardsEdit, setCardsEdit] = useState([...cards]);
+    const [counterSalle, setCounterSalle] = useState(0)
+    const [accData, setAccData] = useState()
     const [selectedSort, setSelectedSort] = useState('');
-    const [selectedModel, setSelectedModel] = useState('');
+    const [cardsEdit, setCardsEdit] = useState();
+    const [selectedAcc, setSelectedAcc] = useState([])
+
+    const [modalState, setModalState] = useState(false)
+
+
+
+
     const sortPosts = (sort) => {
         setSelectedSort(sort);
-        setCardsEdit([...cardsEdit].sort(function (a, b) {
+        setCardsEdit([...accData].sort((a, b) => {
             if (sort === 'ascendingPrice') {
-                return a.accessoryPriceProductDiscount - b.accessoryPriceProductDiscount;
+                return +a['accessoryPriceProductDiscount'].replace(/\s/g, '') - +b['accessoryPriceProductDiscount'].replace(/\s/g, '');
             } else {
-                return b.accessoryPriceProductDiscount - a.accessoryPriceProductDiscount;
+                return +b['accessoryPriceProductDiscount'].replace(/\s/g, '') - +a['accessoryPriceProductDiscount'].replace(/\s/g, '');
             }
         }));
     }
 
-    const sortPostsModel = (model) => {
-        // const [cardsCopy, setCardsCopy] = useState([...cards])
-        setSelectedModel(model);
-        setCardsEdit([...cards].filter(card => card.modelName === model));
-    };
+    useEffect(() => {
+        console.log(modalState)
+    }, [modalState])
 
+    useEffect(() => {
+        const url = new URL(window.location.href)
+        const model = url.searchParams.get('model')
+        const brand = url.searchParams.get('brand')
+        getAccessories(model, brand).then((data) => {
+            setAccData(data.data['accessories'])
+        })
+    }, [])
+
+    const collectSelectedAcc = (e) => {
+        if (e.target.checked) {
+            let obj = {'id': e.target.attributes['id'].value, 'name': e.target.attributes['data-name'].value}
+            setSelectedAcc([...selectedAcc, obj])
+        } else {
+            setSelectedAcc([...selectedAcc].filter(item => item.id !== e.target.attributes['id'].value))
+        }
+    }
+
+    const changeCounter = (e) => {
+        if (e.target.checked) {
+            setCounterSalle(counterSalle + 1)
+        } else {
+            setCounterSalle(counterSalle - 1)
+        }
+    }
+
+    const clickMyButton = (e) => {
+        setModalState(true)
+        // alert('1')
+    }
+
+    const formChange = (e) => {
+        collectSelectedAcc(e)
+        changeCounter(e)
+    }
     return (
         <div className="App">
+            {
+                modalState
+                    ? <MyModal selectedAcc={selectedAcc} modalState={modalState} setState={setModalState}/>
+                    : ''
+            }
 
-            <div className="selectGroup" style={{display: "flex", flexWrap: "wrap"}}>
-                <MySelect
-                    value={selectedModel}
-                    onChange={sortPostsModel}
-                    defaultValue="Модель"
-                    options={models}
-                />
-
-                <MySelect
-                    value={selectedSort}
-                    onChange={sortPosts}
-                    defaultValue="Сортировка по"
-                    options={[{value: 'ascendingPrice', name: 'По возрастанию цены'}, {
-                        value: 'descendingPrice',
-                        name: 'По убыванию цены'
-                    }]}
-                />
+            <div className="selectGroup"
+                 style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
+                <div>
+                    <MySelect
+                        value={selectedSort}
+                        onChange={sortPosts}
+                        defaultValue="Сортировка по"
+                        options={[
+                            {value: 'ascendingPrice', name: 'По возрастанию цены'},
+                            {value: 'descendingPrice', name: 'По убыванию цены'}
+                        ]}
+                    />
+                </div>
+                <MyButton style={{
+                    display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
+                    pointerEvents: counterSalle ? '' : 'none',
+                    opacity: counterSalle ? '' : '0.2'
+                }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
             </div>
+            <form onChange={formChange}>
+                {
+                    accData
+                        ? <CardsList data={cardsEdit ? cardsEdit : accData}/>
+                        : ''
+                }
 
-            <CardsList cards={cardsEdit}/>
+            </form>
         </div>
     );
 }

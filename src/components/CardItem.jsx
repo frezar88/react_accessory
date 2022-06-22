@@ -1,27 +1,58 @@
-import React from 'react';
+import React, {useState} from 'react';
 import s from './CardItem.module.scss';
-import MyButton from "./UI/MyButton";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const CardItem = ({imgURL, title, description, price1, price2, discount}) => {
+const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,discount,priceDiscountWork,priceWork}) => {
+    const [checkBoxState, setCheckBoxState] = useState(false);
+
     return (
         <div className={s.card}>
-            <div className={s.card__wrapper}>
-                <div className={s.card__discount}>-{100-discount}%</div>
+            <label htmlFor={id}>
+                <div className={[s.card__wrapper, checkBoxState ? s.active : ''].join(' ')}>
+                    {
+                        checkBoxState
+                            ? <CheckCircleIcon fontSize={"large"} style={{
+                                color: "#dc2626",
+                                position:'absolute',
+                                zIndex:11111,
+                            }}/>
+                            : ''
+                    }
 
-                <div className={s.card__img}>
-                    <img src={imgURL} alt=""/>
-                </div>
-                <h4 className={s.card__title}>{title}</h4>
+                    <input value={checkBoxState} data-name={title} onChange={(e) => setCheckBoxState(e.target.checked)} type={'checkbox'}
+                           id={id}/>
+                    <div className={s.card__discount}>-{100 - discount}%</div>
 
-                <div className={s.card__bottom}>
-                    <p className={s.card__price}>
-                        <span className={s.card__price_new}>{price1} BYN</span>
-                        <span className={s.card__price_old}>{price2} BYN</span>
-                    </p>
-                    <MyButton/>
+                    <div className={s.card__img}>
+                        {/*<img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>*/}
+                        <img src={'/img/'+ imgURL} alt=""/>
+                    </div>
+                    <h4 className={s.card__title}>{title}</h4>
+
+                    <div className={s.card__bottom}>
+                        <div className={s.card__price}>
+                            <div>
+                                <p> цена товара</p>
+                                <div className={s.price_wrapper}>
+                                    <span className={s.card__price_new}>{priceProduct} BYN</span>
+                                    <span className={s.card__price_old}>{priceDiscount} BYN</span>
+                                </div>
+
+                            </div>
+                            <div className={s.card__install}>
+                                <p> цена c установкой</p>
+                                <div className={s.price_wrapper}>
+                                    <span className={s.card__price_new}>{String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
+                                    <span className={s.card__price_old}>{String(+(priceDiscount.replace(/\s/g, '')) + +(priceDiscountWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </label>
         </div>
+
     );
 };
 
