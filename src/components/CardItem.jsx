@@ -24,8 +24,8 @@ const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,di
                     <div className={s.card__discount}>-{100 - discount}%</div>
 
                     <div className={s.card__img}>
-                        {/*<img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>*/}
-                        <img src={'/img/'+ imgURL} alt=""/>
+                        <img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>
+                        {/*<img src={'/img/'+ imgURL} alt=""/>*/}
                     </div>
                     <h4 className={s.card__title}>{title}</h4>
 
