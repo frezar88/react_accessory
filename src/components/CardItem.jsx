@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import s from './CardItem.module.scss';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import no_img from '../images/no_photo.ce9ed2a116e8d6b2c63f.png'
 
 const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,discount,priceDiscountWork,priceWork}) => {
     const [checkBoxState, setCheckBoxState] = useState(false);
-
+    const [imgError,setImgError]=useState(false)
     return (
         <div className={s.card}>
             <label htmlFor={id}>
@@ -24,7 +25,17 @@ const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,di
                     <div className={s.card__discount}>-{100 - discount}%</div>
 
                     <div className={s.card__img}>
-                        <img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>
+                        <img
+                            onError={(e)=>{
+                                if (e.type ==='error'){
+                                    setImgError(true)
+                                }
+                            }}
+                            // src={imgError ? no_img: 'https://aks.aps.by/img/' + imgURL} alt="#"
+                            src={imgError ? no_img: '/img/' + imgURL} alt="#"
+                        />
+                        {/*<img src={imgError ? no_img:'/img/'+ imgURL} alt=""/>*/}
+                        {/*<img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>*/}
                         {/*<img src={'/img/'+ imgURL} alt=""/>*/}
                     </div>
                     <h4 className={s.card__title}>{title}</h4>
