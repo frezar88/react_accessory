@@ -11,17 +11,20 @@ function App() {
     const [counterSalle, setCounterSalle] = useState(0)
     const [accData, setAccData] = useState()
     const [selectedSort, setSelectedSort] = useState('');
-    const [cardsEdit, setCardsEdit] = useState();
     const [selectedAcc, setSelectedAcc] = useState([])
 
     const [modalState, setModalState] = useState(false)
 
+    const [selectBrandStateOptions, setSelectBrandStateOptions] = useState([])
+    const [selectModelStateOptions, setSelectModelStateOptions] = useState([])
 
+    const [selectBrandState, setSelectBrandState] = useState()
+    const [selectModelState, setSelectModelState] = useState()
 
 
     const sortPosts = (sort) => {
         setSelectedSort(sort);
-        setCardsEdit([...accData].sort((a, b) => {
+        setAccData([...accData].sort((a, b) => {
             if (sort === 'ascendingPrice') {
                 return +a['accessoryPriceProductDiscount'].replace(/\s/g, '') - +b['accessoryPriceProductDiscount'].replace(/\s/g, '');
             } else {
@@ -30,18 +33,33 @@ function App() {
         }));
     }
 
-    useEffect(() => {
-        console.log(modalState)
-    }, [modalState])
 
     useEffect(() => {
-        const url = new URL(window.location.href)
-        const model = url.searchParams.get('model')
-        const brand = url.searchParams.get('brand')
-        getAccessories(model, brand).then((data) => {
-            setAccData(data.data['accessories'])
+        let brandSet = new Set()
+        let modelSet = new Set()
+        getAccessories().then((data) => {
+            data.data.data.forEach((el) => {
+                brandSet.add(el['brandName'])
+                modelSet.add(el['modelName'])
+            })
+            let arrBrandSet = [...brandSet]
+            let arrModelSet = [...modelSet]
+            let optionsBrand = []
+            let optionsModel = []
+
+            arrBrandSet.forEach((el) => {
+                optionsBrand.push({value: el, name: el})
+            })
+
+            arrModelSet.forEach((el) => {
+                optionsModel.push({value: el, name: el})
+            })
+            setSelectBrandStateOptions(optionsBrand)
+            setSelectModelStateOptions(optionsModel)
+            setAccData(data.data.data)
         })
     }, [])
+
 
     const collectSelectedAcc = (e) => {
         if (e.target.checked) {
@@ -62,13 +80,18 @@ function App() {
 
     const clickMyButton = (e) => {
         setModalState(true)
-        // alert('1')
     }
 
     const formChange = (e) => {
         collectSelectedAcc(e)
         changeCounter(e)
     }
+
+
+    console.log(accData)
+    useEffect(()=>{
+        console.log(selectBrandState)
+    },[selectBrandState])
     return (
         <div className="App">
             {
@@ -80,6 +103,19 @@ function App() {
             <div className="selectGroup"
                  style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
                 <div>
+                    <MySelect
+                        value={selectBrandState}
+                        onChange={(value) => setSelectBrandState(value)}
+                        defaultValue="Бренд"
+                        options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
+
+                    />
+                    <MySelect
+                        value={selectModelState}
+                        onChange={(value) => setSelectModelState(value)}
+                        defaultValue="Модель"
+                        options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
+                    />
                     <MySelect
                         value={selectedSort}
                         onChange={sortPosts}
@@ -99,7 +135,12 @@ function App() {
             <form onChange={formChange}>
                 {
                     accData
-                        ? <CardsList data={cardsEdit ? cardsEdit : accData}/>
+                        ? <CardsList
+                            data={
+                                accData.filter((item) => selectBrandState && selectBrandState!=='Все' ? item['brandName'] === selectBrandState : item)
+                                    .filter((item) => selectModelState && selectModelState!=='Все' ? item['modelName'] === selectModelState : item)
+                        }
+                        />
                         : ''
                 }
                 <div className={'stupid'}>

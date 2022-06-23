@@ -15,9 +15,10 @@ const CardsList = ({cards, data}) => {
                           accessoryPriceProduct,
                           accessoryPriceWork,
                           accessoryPriceWorkDiscount
-                      }) =>
+                      },index) =>
                 <CardItem
-                    key={accessoryId}
+                    // key={accessoryId.replaceAll('`')}
+                    key={index}
                     id={accessoryId}
                     imgURL={accessoryPhoto}
                     title={accessoryName}
