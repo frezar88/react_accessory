@@ -1,0 +1,225 @@
+@charset "UTF-8";
+/*Обнуление*/
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+*,
+*:before,
+*:after :focus,
+:active {
+  outline: none;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+nav,
+footer,
+header,
+aside {
+  display: block;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  line-height: 1;
+  font-size: 14px;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: 400;
+  margin: 0;
+}
+
+/*--------------------*/
+.site {
+  font-family: 'Play', sans-serif;
+}
+
+.site header {
+  padding: 10px 0;
+  background: #712cf9;
+}
+
+.site header .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  gap: 10px;
+}
+
+.site header .container h5 {
+  font-size: 30px;
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  color: #fff;
+}
+
+.site header .container img {
+  width: 100%;
+  max-width: 50px;
+}
+
+.site main {
+  padding: 50px 0;
+  min-height: calc(100vh - 120px);
+}
+
+.site main .content {
+  gap: 15px;
+  border-radius: 2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.site main .content .side-bar {
+  max-height: 325px;
+  -webkit-box-shadow: 3px 3px 5px 3px #00000052;
+          box-shadow: 3px 3px 5px 3px #00000052;
+  padding: 15px;
+  max-width: 280px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.site main .content .side-bar h4 {
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: solid 1px #00000052;
+  padding-bottom: 10px;
+}
+
+.site main .content .side-bar ul li {
+  width: 100%;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #000000ad;
+}
+
+.site main .content .side-bar ul li span {
+  font-weight: bold;
+  color: black;
+}
+
+.site main .content .side-bar ul li:nth-child(2) {
+  margin-bottom: 20px;
+  border-bottom: solid 1px #00000052;
+  padding-bottom: 10px;
+    padding-bottom: 20px;
+}
+.site main .content .side-bar ul li:nth-child() {
+    margin-bottom: 20px;
+    border-bottom: solid 1px #00000052;
+    padding-bottom: 10px;
+}
+
+.site main .content .cars {
+  width: 100%;
+}
+
+.site main .content .cars .accordion-button {
+  font-size: 20px;
+}
+
+.site main .content .cars .accordion-button:focus {
+  border-color: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.site main .content .cars .accordion-body {
+  padding: 20px 0 20px 20px;
+}
+
+.site main .content .cars .accordion-button[aria-expanded="true"] {
+  background-color: #712cf9;
+  color: #fff;
+}
+
+.site main .content .cars .accord-in .accordion-button {
+  padding: 10px 10px;
+  font-size: 15px !important;
+}
+
+.site footer {
+  height: 50px;
+  background: #712cf9;
+}
+
+@media (max-width: 768px) {
+  .site main .content {
+    display: -ms-grid !important;
+    display: grid !important;
+    -webkit-box-pack: center !important;
+        -ms-flex-pack: center !important;
+            justify-content: center !important;
+  }
+}
+/*# sourceMappingURL=style.css.map */
