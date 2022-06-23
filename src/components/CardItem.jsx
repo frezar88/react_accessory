@@ -42,7 +42,9 @@ const CardItem = ({
                                     setImgError(true)
                                 }
                             }}
-                            src={imgError ? no_img: 'https://aks.aps.by/img/' + imgURL} alt=""/>
+                            // src={imgError ? no_img: 'https://aks.aps.by/img/' + imgURL} alt="#"
+                            src={imgError ? no_img: '/img/' + imgURL} alt="#"
+                        />
                         {/*<img src={imgError ? no_img:'/img/'+ imgURL} alt=""/>*/}
                     </div>
                     <h4 className={s.card__title}>{title}</h4>

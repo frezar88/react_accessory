@@ -32,30 +32,18 @@ function App() {
             }
         }));
     }
-
-
     useEffect(() => {
         let brandSet = new Set()
-        let modelSet = new Set()
         getAccessories().then((data) => {
             data.data.data.forEach((el) => {
                 brandSet.add(el['brandName'])
-                modelSet.add(el['modelName'])
             })
             let arrBrandSet = [...brandSet]
-            let arrModelSet = [...modelSet]
             let optionsBrand = []
-            let optionsModel = []
-
             arrBrandSet.forEach((el) => {
                 optionsBrand.push({value: el, name: el})
             })
-
-            arrModelSet.forEach((el) => {
-                optionsModel.push({value: el, name: el})
-            })
             setSelectBrandStateOptions(optionsBrand)
-            setSelectModelStateOptions(optionsModel)
             setAccData(data.data.data)
         })
     }, [])
@@ -90,7 +78,21 @@ function App() {
 
     console.log(accData)
     useEffect(()=>{
-        console.log(selectBrandState)
+        let currentModelSet=new Set()
+        setSelectModelState('')
+        if (accData){
+            accData.filter((item)=>selectBrandState && selectBrandState!=='Все' ? item['brandName'] === selectBrandState : item).forEach((el)=>{
+                currentModelSet.add(el['modelName'])
+            })
+           let arrModelSet= [...currentModelSet]
+            let arrSelectModalOptions=[]
+            arrModelSet.forEach((el)=>{
+                arrSelectModalOptions.push({value:el,name:el})
+            })
+            setSelectModelStateOptions(arrSelectModalOptions)
+        }
+
+
     },[selectBrandState])
     return (
         <div className="App">
@@ -110,12 +112,18 @@ function App() {
                         options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
 
                     />
-                    <MySelect
-                        value={selectModelState}
-                        onChange={(value) => setSelectModelState(value)}
-                        defaultValue="Модель"
-                        options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
-                    />
+                    {
+                        selectBrandState && selectBrandState !=='Все'
+                            ?     <MySelect
+                                value={selectModelState}
+                                onChange={(value) => setSelectModelState(value)}
+                                defaultValue="Модель"
+                                options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
+                            />
+                            :''
+
+                    }
+
                     <MySelect
                         value={selectedSort}
                         onChange={sortPosts}
