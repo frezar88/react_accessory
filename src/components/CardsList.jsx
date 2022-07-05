@@ -26,7 +26,7 @@ const CardsList = ({cards, data}) => {
                     priceProduct={accessoryPriceProduct}
                     priceWork ={accessoryPriceWork}
                     priceDiscountWork={accessoryPriceWorkDiscount}
-                    discount={accessoryPriceProductDiscount.replace(/\s/g, '')/accessoryPriceProduct.replace(/\s/g, '')*100}
+                    discount={Math.round( accessoryPriceProductDiscount.replace(/\s/g, '')/accessoryPriceProduct.replace(/\s/g, '')*100)}
                 />
             )
         }
