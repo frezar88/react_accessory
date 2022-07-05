@@ -1,10 +1,21 @@
 import React, {useState} from 'react';
 import s from './CardItem.module.scss';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import no_img from '../images/no_photo.ce9ed2a116e8d6b2c63f.png'
 
-const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,discount,priceDiscountWork,priceWork}) => {
+const CardItem = ({
+                      id,
+                      imgURL,
+                      title,
+                      description,
+                      priceProduct,
+                      priceDiscount,
+                      discount,
+                      priceDiscountWork,
+                      priceWork
+                  }) => {
     const [checkBoxState, setCheckBoxState] = useState(false);
-
+    const [imgError, setImgError] = useState(false)
     return (
         <div className={s.card}>
             <label htmlFor={id}>
@@ -13,19 +24,30 @@ const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,di
                         checkBoxState
                             ? <CheckCircleIcon fontSize={"large"} style={{
                                 color: "#dc2626",
-                                position:'absolute',
-                                zIndex:11111,
+                                position: 'absolute',
+                                zIndex: 11111,
                             }}/>
                             : ''
                     }
 
-                    <input value={checkBoxState} data-name={title} onChange={(e) => setCheckBoxState(e.target.checked)} type={'checkbox'}
+                    <input value={checkBoxState} data-name={title}
+                           type={'checkbox'}
                            id={id}/>
-                    <div className={s.card__discount}>-{100 - discount}%</div>
+                    <div style={{opacity: 100 - discount <= 0 ? 0 : 1}}
+                         className={s.card__discount}>-{100 - discount}%
+                    </div>
 
                     <div className={s.card__img}>
-                        <img src={'https://aks.aps.by/img/'+ imgURL} alt=""/>
-                        {/*<img src={'/img/'+ imgURL} alt=""/>*/}
+                        <img
+                            onError={(e) => {
+                                if (e.type === 'error') {
+                                    setImgError(true)
+                                }
+                            }}
+                            // src={imgError ? no_img: 'https://aks.aps.by/img/' + imgURL} alt="#"
+                            src={imgError ? no_img : '/img/' + imgURL} alt="#"
+                        />
+                        {/*<img src={imgError ? no_img:'/img/'+ imgURL} alt=""/>*/}
                     </div>
                     <h4 className={s.card__title}>{title}</h4>
 
@@ -34,16 +56,33 @@ const CardItem = ({id,imgURL, title, description, priceProduct, priceDiscount,di
                             <div>
                                 <p> цена товара</p>
                                 <div className={s.price_wrapper}>
-                                    <span className={s.card__price_new}>{priceProduct} BYN</span>
-                                    <span className={s.card__price_old}>{priceDiscount} BYN</span>
+                                    <span className={s.card__price_new}>{priceDiscount} BYN</span>
+                                    <span style={{opacity: priceDiscount === priceProduct ? 0 : 1}}
+                                          className={s.card__price_old}>{priceProduct} BYN</span>
                                 </div>
 
                             </div>
                             <div className={s.card__install}>
                                 <p> цена c установкой</p>
-                                <div className={s.price_wrapper}>
-                                    <span className={s.card__price_new}>{String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
-                                    <span className={s.card__price_old}>{String(+(priceDiscount.replace(/\s/g, '')) + +(priceDiscountWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
+                                <div
+                                    style={{
+                                        justifyContent: priceDiscountWork === priceWork ? "center" : "",
+
+                                    }}
+                                    className={s.price_wrapper}>
+                                    <span
+
+                                        className={s.card__price_new}>
+                                        {String(+(priceDiscount.replace(/\s/g, '')) + +(priceDiscountWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN
+                                    </span>
+                                    <span
+                                        style={{
+                                            display: priceDiscountWork === priceWork ? "none" : "block",
+
+                                        }}
+                                        className={s.card__price_old}>
+                                        {String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN
+                                    </span>
                                 </div>
 
                             </div>
