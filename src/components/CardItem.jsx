@@ -15,7 +15,7 @@ const CardItem = ({
                       priceWork
                   }) => {
     const [checkBoxState, setCheckBoxState] = useState(false);
-    const [imgError,setImgError]=useState(false)
+    const [imgError, setImgError] = useState(false)
     return (
         <div className={s.card}>
             <label htmlFor={id}>
@@ -33,17 +33,19 @@ const CardItem = ({
                     <input value={checkBoxState} data-name={title} onChange={(e) => setCheckBoxState(e.target.checked)}
                            type={'checkbox'}
                            id={id}/>
-                    <div className={s.card__discount}>-{100 - discount}%</div>
+                    <div style={{opacity: 100 - discount <= 0 ? 0 : 1}}
+                         className={s.card__discount}>-{100 - discount}%
+                    </div>
 
                     <div className={s.card__img}>
                         <img
-                            onError={(e)=>{
-                                if (e.type ==='error'){
+                            onError={(e) => {
+                                if (e.type === 'error') {
                                     setImgError(true)
                                 }
                             }}
                             // src={imgError ? no_img: 'https://aks.aps.by/img/' + imgURL} alt="#"
-                            src={imgError ? no_img: '/img/' + imgURL} alt="#"
+                            src={imgError ? no_img : '/img/' + imgURL} alt="#"
                         />
                         {/*<img src={imgError ? no_img:'/img/'+ imgURL} alt=""/>*/}
                     </div>
@@ -54,18 +56,33 @@ const CardItem = ({
                             <div>
                                 <p> цена товара</p>
                                 <div className={s.price_wrapper}>
-                                    <span className={s.card__price_new}>{priceProduct} BYN</span>
-                                    <span className={s.card__price_old}>{priceDiscount} BYN</span>
+                                    <span className={s.card__price_new}>{priceDiscount} BYN</span>
+                                    <span style={{opacity: priceDiscount === priceProduct ? 0 : 1}}
+                                          className={s.card__price_old}>{priceProduct} BYN</span>
                                 </div>
 
                             </div>
                             <div className={s.card__install}>
                                 <p> цена c установкой</p>
-                                <div className={s.price_wrapper}>
+                                <div
+                                    style={{
+                                        justifyContent: priceDiscountWork === priceWork ? "center" : "",
+
+                                    }}
+                                    className={s.price_wrapper}>
                                     <span
-                                        className={s.card__price_new}>{String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
+
+                                        className={s.card__price_new}>
+                                        {String(+(priceDiscount.replace(/\s/g, '')) + +(priceDiscountWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN
+                                    </span>
                                     <span
-                                        className={s.card__price_old}>{String(+(priceDiscount.replace(/\s/g, '')) + +(priceDiscountWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN</span>
+                                        style={{
+                                            display: priceDiscountWork === priceWork ? "none" : "block",
+
+                                        }}
+                                        className={s.card__price_old}>
+                                        {String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN
+                                    </span>
                                 </div>
 
                             </div>
