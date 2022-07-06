@@ -16,16 +16,19 @@ function App() {
 
     const [modalState, setModalState] = useState(false)
 
-
+//Math.round( accessoryPriceProductDiscount.replace(/\s/g, '')/accessoryPriceProduct.replace(/\s/g, '')*100)
 
 
     const sortPosts = (sort) => {
         setSelectedSort(sort);
         setCardsEdit([...accData].sort((a, b) => {
+            let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+            let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
             if (sort === 'ascendingPrice') {
-                return +a['accessoryPriceProductDiscount'].replace(/\s/g, '') - +b['accessoryPriceProductDiscount'].replace(/\s/g, '');
+
+                return discountA - discountB;
             } else {
-                return +b['accessoryPriceProductDiscount'].replace(/\s/g, '') - +a['accessoryPriceProductDiscount'].replace(/\s/g, '');
+                return discountB - discountA;
             }
         }));
     }
@@ -39,7 +42,11 @@ function App() {
         const model = url.searchParams.get('model')
         const brand = url.searchParams.get('brand')
         getAccessories(model, brand).then((data) => {
-            setAccData(data.data['accessories'])
+            setAccData(data.data['accessories'].sort((a, b) => {
+                let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                return discountB - discountA;
+            }))
         })
     }, [])
 
@@ -71,32 +78,40 @@ function App() {
     }
     return (
         <div className="App">
+            <div className="selectGroup"
+                 style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
+                <div style={{
+                    display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%',maxWidth:'1520px',
+                    margin:'0 auto'
+                }} >
+                    <div >
+                        <MySelect
+                            value={selectedSort}
+                            onChange={sortPosts}
+                            defaultValue="Сортировка"
+
+                            options={[
+                                {value: 'ascendingPrice', name: 'По возрастанию скидки'},
+                                {value: 'descendingPrice', name: 'По убыванию скидки'}
+                            ]}
+                        />
+                    </div>
+                    <MyButton style={{
+                        display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
+                        pointerEvents: counterSalle ? '' : 'none',
+                        opacity: counterSalle ? '' : '0.2'
+                    }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
+                </div>
+
+            </div>
             {
                 modalState
                     ? <MyModal selectedAcc={selectedAcc} modalState={modalState} setState={setModalState}/>
                     : ''
             }
 
-            <div className="selectGroup"
-                 style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
-                <div>
-                    <MySelect
-                        value={selectedSort}
-                        onChange={sortPosts}
-                        defaultValue="Сортировка по"
-                        options={[
-                            {value: 'ascendingPrice', name: 'По возрастанию цены'},
-                            {value: 'descendingPrice', name: 'По убыванию цены'}
-                        ]}
-                    />
-                </div>
-                <MyButton style={{
-                    display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
-                    pointerEvents: counterSalle ? '' : 'none',
-                    opacity: counterSalle ? '' : '0.2'
-                }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
-            </div>
-            <form onChange={formChange}>
+
+            <form className={'form-form'} onChange={formChange}>
                 {
                     accData
                         ? <CardsList data={cardsEdit ? cardsEdit : accData}/>

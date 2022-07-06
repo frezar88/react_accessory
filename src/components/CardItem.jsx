@@ -57,7 +57,7 @@ const CardItem = ({
                                 <p> цена товара</p>
                                 <div className={s.price_wrapper}>
                                     <span className={s.card__price_new}>{priceDiscount} BYN</span>
-                                    <span style={{opacity: priceDiscount === priceProduct ? 0 : 1}}
+                                    <span style={{display: priceDiscount === priceProduct ? "none" : "block"}}
                                           className={s.card__price_old}>{priceProduct} BYN</span>
                                 </div>
 
@@ -84,9 +84,13 @@ const CardItem = ({
                                         {String(+(priceProduct.replace(/\s/g, '')) + +(priceWork.replace(/\s/g, ''))).replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')} BYN
                                     </span>
                                 </div>
-
                             </div>
+
                         </div>
+
+                    </div>
+                    <div className={[s.in_bucket, checkBoxState ? s.active : ''].join(' ')}>
+                        <i type={'button'}>{checkBoxState?'Добавлено': 'В корзину'}</i>
                     </div>
                 </div>
             </label>

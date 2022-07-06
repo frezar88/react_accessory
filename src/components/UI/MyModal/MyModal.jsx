@@ -92,7 +92,7 @@ const MyModal = ({setState, selectedAcc,}) => {
                                         id="name"
                                         color={name.length > 2 ? 'success' : "error"}
                                         size={"small"}
-                                        label="ФИО"
+                                        label="Имя"
                                         variant="outlined"
                                         value={name}
                                         onInput={inputName}
