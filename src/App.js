@@ -101,7 +101,7 @@ function App() {
                                 {value: 'descendingPrice', name: 'По убыванию цены'},
                             ]}
                         />
-                        <a  href="/all-brand">Другие акксесуары</a>
+                        <a  href="/all-brand">Другие аксессуары</a>
                     </div>
 
                     <MyButton style={{
