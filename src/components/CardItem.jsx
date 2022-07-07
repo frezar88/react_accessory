@@ -19,7 +19,7 @@ const CardItem = ({
     const [imgError, setImgError] = useState(false)
     return (
         <div className={s.card}>
-            <label htmlFor={index}>
+            <label htmlFor={id}>
 
                 <div className={[s.card__wrapper, checkBoxState ? s.active : ''].join(' ')}>
                     {
@@ -34,7 +34,7 @@ const CardItem = ({
 
                     <input value={checkBoxState} data-name={title} onChange={(e) => setCheckBoxState(e.target.checked)}
                            type={'checkbox'}
-                           id={index}/>
+                           id={id}/>
                     <div style={{opacity: 100 - discount <= 0 ? 0 : 1}}
                          className={s.card__discount}>-{100 - discount}%
                     </div>
