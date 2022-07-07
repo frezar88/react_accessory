@@ -21,6 +21,8 @@ function App() {
     const [selectBrandState, setSelectBrandState] = useState()
     const [selectModelState, setSelectModelState] = useState()
 
+    const [getParams, setGetParams] = useState({brand: '', model: ''})
+
 
     const sortPosts = (sort) => {
         setSelectedSort(sort);
@@ -36,6 +38,13 @@ function App() {
         }));
     }
     useEffect(() => {
+        const url = new URL(window.location.href)
+        const model = url.searchParams.get('model')
+        const brand = url.searchParams.get('brand')
+
+        setGetParams({'model': model, 'brand': brand})
+
+
         let brandSet = new Set()
         getAccessories().then((data) => {
             data.data.data.forEach((el) => {
@@ -47,12 +56,12 @@ function App() {
                 optionsBrand.push({value: el, name: el})
             })
             setSelectBrandStateOptions(optionsBrand)
-            console.log(data.data.data)
             setAccData(data.data.data.sort((a, b) => {
                 let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
                 let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
                 return discountB - discountA;
-            }))
+            })
+            )
         })
     }, [])
 
@@ -84,7 +93,6 @@ function App() {
     }
 
 
-
     useEffect(() => {
         let currentModelSet = new Set()
         setSelectModelState('')
@@ -113,15 +121,22 @@ function App() {
                  style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
                 <div
                     style={{
-                        display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%',maxWidth:'1520px',
-                        margin:'0 auto'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        maxWidth: '1520px',
+                        margin: '0 auto'
                     }}
                 >
                     <div className={'wwrapper'}>
                         <MySelect
                             value={selectBrandState}
-                            onChange={(value) => setSelectBrandState(value)}
-                            defaultValue="Бренд"
+                            onChange={(value) => {
+                                setGetParams({'model': '', 'brand': ''})
+                                setSelectBrandState(value)
+                            }}
+                            defaultValue={getParams['brand']?getParams['brand'][0].toUpperCase() + getParams['brand'].slice(1) :'Бренд'}
                             options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
 
                         />
@@ -129,7 +144,10 @@ function App() {
                             selectBrandState && selectBrandState !== 'Все'
                                 ? <MySelect
                                     value={selectModelState}
-                                    onChange={(value) => setSelectModelState(value)}
+                                    onChange={(value) => {
+                                        setGetParams({'model': '', 'brand': ''})
+                                        setSelectModelState(value)
+                                    }}
                                     defaultValue="Модель"
                                     options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
                                 />
@@ -162,6 +180,8 @@ function App() {
                             data={
                                 accData.filter((item) => selectBrandState && selectBrandState !== 'Все' ? item['brandName'] === selectBrandState : item)
                                     .filter((item) => selectModelState && selectModelState !== 'Все' ? item['modelName'] === selectModelState : item)
+                                    .filter((item)=>getParams['model'] ? item['modelName'].toLowerCase() === getParams['model'].toLowerCase() : item)
+                                    .filter((item)=>getParams['brand'] ?item['brandName'].toLowerCase() ===getParams['brand'].toLowerCase():item )
                             }
                         />
                         : ''
