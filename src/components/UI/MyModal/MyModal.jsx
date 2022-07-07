@@ -15,6 +15,7 @@ const MyModal = ({setState, selectedAcc,}) => {
     }
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('_')
+    const [city, setCity] = useState('')
 
     const [messageSend, setMessageSend] = useState(false)
 
@@ -23,6 +24,9 @@ const MyModal = ({setState, selectedAcc,}) => {
     }
     const inputPhone = (e) => {
         setPhone(e.target.value)
+    }
+    const inputCity = (e) => {
+        setCity(e.target.value)
     }
     const sendData = () => {
         setSpinner(true)
@@ -33,6 +37,7 @@ const MyModal = ({setState, selectedAcc,}) => {
         let data = {
             "full_name": name,
             "phone": phone,
+            "city": city,
             "accessories": accessories_id
         }
 
@@ -108,15 +113,24 @@ const MyModal = ({setState, selectedAcc,}) => {
                                             color={phone.indexOf('_') === -1 ? 'success' : "error"}
                                         />}
                                     </InputMask>
+                                    <TextField
+                                        id="name"
+                                        color={city.length > 2 ? 'success' : "error"}
+                                        size={"small"}
+                                        label="Город"
+                                        variant="outlined"
+                                        value={city}
+                                        onInput={inputCity}
+                                    />
                                 </div>
                                 <Button
                                     onClick={sendData}
                                     type={"button"}
                                     variant={"contained"}
                                     style={{
-                                        background: name.length > 2 && phone.indexOf('_') === -1 ? 'green' : 'gray',
-                                        pointerEvents: name.length > 2 && phone.indexOf('_') === -1 ? 'unset' : 'none',
-                                        opacity: name.length > 2 && phone.indexOf('_') === -1 ? '1' : '0.4'
+                                        background: name.length > 2 && city.length > 2 && phone.indexOf('_') === -1 ? 'green' : 'gray',
+                                        pointerEvents: name.length > 2 && city.length > 2 && phone.indexOf('_') === -1 ? 'unset' : 'none',
+                                        opacity: name.length > 2 && city.length > 2 && phone.indexOf('_') === -1 ? '1' : '0.4'
                                     }}
                                 >
                                     {
