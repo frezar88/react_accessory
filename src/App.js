@@ -12,9 +12,13 @@ const App = () => {
         <div className={s.App}>
         <header >
             <div className={s.container}>
-                fds
+
             </div>
         </header>
+            <div className={s.container}>
+
+                fds
+            </div>
         </div>
     );
 };
