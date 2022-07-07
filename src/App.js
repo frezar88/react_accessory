@@ -23,6 +23,8 @@ function App() {
 
     const [getParams, setGetParams] = useState({brand: '', model: ''})
 
+    const [defaultModelOptions, setDefaultModelOptions] = useState([])
+
 
     const sortPosts = (sort) => {
         setSelectedSort(sort);
@@ -47,6 +49,20 @@ function App() {
 
         let brandSet = new Set()
         getAccessories().then((data) => {
+            let defaultModelSet = new Set()
+            let modelOpt =[]
+            if (brand) {
+                data.data.data.filter((item) => item.brandName.toLowerCase() === brand.toLowerCase())
+                    .forEach((el) => {
+                        defaultModelSet.add(el['modelName'])
+                    })
+                let defaultModelArr = [...defaultModelSet]
+                defaultModelArr.forEach((el)=>{
+                    modelOpt.push({value: el, name: el})
+                })
+                setDefaultModelOptions(modelOpt)
+            }
+
             data.data.data.forEach((el) => {
                 brandSet.add(el['brandName'])
             })
@@ -57,10 +73,10 @@ function App() {
             })
             setSelectBrandStateOptions(optionsBrand)
             setAccData(data.data.data.sort((a, b) => {
-                let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-                let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-                return discountB - discountA;
-            })
+                    let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                    let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                    return discountB - discountA;
+                })
             )
         })
     }, [])
@@ -136,12 +152,12 @@ function App() {
                                 setGetParams({'model': '', 'brand': ''})
                                 setSelectBrandState(value)
                             }}
-                            defaultValue={getParams['brand']?getParams['brand'][0].toUpperCase() + getParams['brand'].slice(1) :'Бренд'}
+                            defaultValue={getParams['brand'] ? getParams['brand'][0].toUpperCase() + getParams['brand'].slice(1) : 'Бренд'}
                             options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
 
                         />
                         {
-                            selectBrandState && selectBrandState !== 'Все'
+                             selectBrandState !== 'Все' || getParams['brand']
                                 ? <MySelect
                                     value={selectModelState}
                                     onChange={(value) => {
@@ -149,7 +165,7 @@ function App() {
                                         setSelectModelState(value)
                                     }}
                                     defaultValue="Модель"
-                                    options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
+                                    options={defaultModelOptions[0] && !selectModelStateOptions[0] ?defaultModelOptions: [{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
                                 />
                                 : ''
 
@@ -180,8 +196,8 @@ function App() {
                             data={
                                 accData.filter((item) => selectBrandState && selectBrandState !== 'Все' ? item['brandName'] === selectBrandState : item)
                                     .filter((item) => selectModelState && selectModelState !== 'Все' ? item['modelName'] === selectModelState : item)
-                                    .filter((item)=>getParams['model'] ? item['modelName'].toLowerCase() === getParams['model'].toLowerCase() : item)
-                                    .filter((item)=>getParams['brand'] ?item['brandName'].toLowerCase() ===getParams['brand'].toLowerCase():item )
+                                    .filter((item) => getParams['model'] ? item['modelName'].toLowerCase() === getParams['model'].toLowerCase() : item)
+                                    .filter((item) => getParams['brand'] ? item['brandName'].toLowerCase() === getParams['brand'].toLowerCase() : item)
                             }
                         />
                         : ''
