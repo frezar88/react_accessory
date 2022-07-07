@@ -29,11 +29,17 @@ function App() {
         setAccData([...accData].sort((a, b) => {
             let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
             let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-            if (sort === 'ascendingPrice') {
-
+            if (sort === 'ascendingDisc') {
                 return discountA - discountB;
-            } else {
+            }
+            if (sort === 'descendingDisc'){
                 return discountB - discountA;
+            }
+            if (sort === 'ascendingPrice'){
+                return +a['accessoryPriceProductDiscount'] - +b['accessoryPriceProductDiscount'];
+            }
+            if (sort === 'descendingPrice'){
+                return +b['accessoryPriceProductDiscount'] - +a['accessoryPriceProductDiscount'];
             }
         }));
     }
@@ -160,8 +166,10 @@ function App() {
                             onChange={sortPosts}
                             defaultValue="Сортировка "
                             options={[
-                                {value: 'ascendingPrice', name: 'По возрастанию скидки'},
-                                {value: 'descendingPrice', name: 'По убыванию скидки'}
+                                {value: 'ascendingDisc', name: 'По возрастанию скидки'},
+                                {value: 'descendingDisc', name: 'По убыванию скидки'},
+                                {value: 'ascendingPrice', name: 'По возрастанию цены'},
+                                {value: 'descendingPrice', name: 'По убыванию цены'},
                             ]}
                         />
                     </div>
@@ -173,7 +181,7 @@ function App() {
                 </div>
 
             </div>
-            <form className={'form-form'} onChange={formChange}>
+            <form className={'form-form'} style={{paddingTop:selectBrandState && selectBrandState !== 'Все'?'180px' :'130px'}} onChange={formChange}>
                 {
                     accData
                         ? <CardsList
