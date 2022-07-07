@@ -109,7 +109,6 @@ function App() {
                     ? <MyModal selectedAcc={selectedAcc} modalState={modalState} setState={setModalState}/>
                     : ''
             }
-
             <div className="selectGroup"
                  style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
                 <div
