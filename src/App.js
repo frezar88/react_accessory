@@ -32,6 +32,7 @@ const App = () => {
                                         ? <ul>
                                             <li>Имя: <span>{data['full_name']}</span></li>
                                             <li>Телефон: <span>{data['phone']}</span></li>
+                                            <li>Город: <span>{data['city']}</span></li>
                                             <li>
                                                 Бренд: <span>{data['clientAccessories'][0]['accessory']['brandName']}</span>
                                             </li>
