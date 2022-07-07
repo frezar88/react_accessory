@@ -24,12 +24,19 @@ function App() {
         setCardsEdit([...accData].sort((a, b) => {
             let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
             let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-            if (sort === 'ascendingPrice') {
-
+            if (sort === 'ascendingDisc') {
                 return discountA - discountB;
-            } else {
+            }
+            if (sort === 'descendingDisc'){
                 return discountB - discountA;
             }
+            if (sort === 'ascendingPrice'){
+                return +a['accessoryPriceProductDiscount'] - +b['accessoryPriceProductDiscount'];
+            }
+            if (sort === 'descendingPrice'){
+                return +b['accessoryPriceProductDiscount'] - +a['accessoryPriceProductDiscount'];
+            }
+
         }));
     }
 
@@ -81,18 +88,22 @@ function App() {
                     display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%',maxWidth:'1520px',
                     margin:'0 auto'
                 }} >
-                    <div >
+                    <div className={'wrapper__for_other'} >
                         <MySelect
                             value={selectedSort}
                             onChange={sortPosts}
                             defaultValue="Сортировка"
 
                             options={[
-                                {value: 'ascendingPrice', name: 'По возрастанию скидки'},
-                                {value: 'descendingPrice', name: 'По убыванию скидки'}
+                                {value: 'ascendingDisc', name: 'По возрастанию скидки'},
+                                {value: 'descendingDisc', name: 'По убыванию скидки'},
+                                {value: 'ascendingPrice', name: 'По возрастанию цены'},
+                                {value: 'descendingPrice', name: 'По убыванию цены'},
                             ]}
                         />
+                        <a  href="/all-brand">Другие акксесуары</a>
                     </div>
+
                     <MyButton style={{
                         display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
                         pointerEvents: counterSalle ? '' : 'none',

@@ -25,7 +25,7 @@ const CardItem = ({
                             ? <CheckCircleIcon fontSize={"large"} style={{
                                 color: "#dc2626",
                                 position: 'absolute',
-                                zIndex: 11111,
+                                zIndex: 1,
                             }}/>
                             : ''
                     }

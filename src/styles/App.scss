@@ -1,13 +1,13 @@
 @import "mixins";
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background: #fafafa;
+  background: #fafafa;
 }
 
 .App {
@@ -16,36 +16,73 @@ body {
   margin: 0 auto;
   position: relative;
   height: 100vh;
-    font-family: Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-family: Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   position: relative;
 }
 
 .selectGroup {
   position: fixed;
-  z-index: 111111111111111111111;
+  z-index: 3;
   left: 0;
   right: 0;
   //background: #dadada;
   background: #fff;
-    padding: 3px 10px;
+  padding: 3px 10px;
   margin: 0 auto;
   box-shadow: 0 0 9px 3px #0000007a;
 
-    //@include max-1024 {
-    //    padding: 36px 8px 8px;
-    //}
+  //@include max-1024 {
+  //    padding: 36px 8px 8px;
+  //}
 }
 
-.stupid{
-  padding: 15px  16px;
+.stupid {
+  padding: 15px 16px;
 
-  h5{
+  h5 {
     text-align: center;
     font-weight: bold;
     font-size: 16px;
   }
 }
 
-.form-form{
-  padding-top:80px ;
+.form-form {
+  padding-top: 80px;
+}
+
+.wrapper__for_other {
+  display: flex;
+  align-items: center;
+  a{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    padding: 20px 14px;
+    width: fit-content;
+    background-color:#fc0;
+    font-weight: 500;
+    text-align: center;
+    color:#000;
+    text-decoration:none;
+    border-radius:10px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 520px) {
+  .wrapper__for_other {
+    display: grid;
+    width: 100%;
+
+   a{
+    margin: 8px;
+     width: 97% !important;
+     order: -1;
+     font-size: 12px;
+     text-align: center !important;
+     padding: 20px 5px;
+   }
+  }
 }
