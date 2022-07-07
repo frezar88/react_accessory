@@ -1,0 +1,19 @@
+.App{
+
+    header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        background: red;
+        height: 40px;
+
+    }
+}
+
+.container{
+    max-width: 1520px;
+    padding: 0 20px;
+    width: 100%;
+    margin: 0 auto;
+}
