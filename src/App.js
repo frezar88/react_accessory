@@ -25,10 +25,13 @@ function App() {
     const sortPosts = (sort) => {
         setSelectedSort(sort);
         setAccData([...accData].sort((a, b) => {
+            let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+            let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
             if (sort === 'ascendingPrice') {
-                return +a['accessoryPriceProductDiscount'].replace(/\s/g, '') - +b['accessoryPriceProductDiscount'].replace(/\s/g, '');
+
+                return discountA - discountB;
             } else {
-                return +b['accessoryPriceProductDiscount'].replace(/\s/g, '') - +a['accessoryPriceProductDiscount'].replace(/\s/g, '');
+                return discountB - discountA;
             }
         }));
     }
@@ -44,7 +47,12 @@ function App() {
                 optionsBrand.push({value: el, name: el})
             })
             setSelectBrandStateOptions(optionsBrand)
-            setAccData(data.data.data)
+            console.log(data.data.data)
+            setAccData(data.data.data.sort((a, b) => {
+                let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                return discountB - discountA;
+            }))
         })
     }, [])
 
@@ -76,24 +84,24 @@ function App() {
     }
 
 
-    console.log(accData)
-    useEffect(()=>{
-        let currentModelSet=new Set()
+
+    useEffect(() => {
+        let currentModelSet = new Set()
         setSelectModelState('')
-        if (accData){
-            accData.filter((item)=>selectBrandState && selectBrandState!=='Все' ? item['brandName'] === selectBrandState : item).forEach((el)=>{
+        if (accData) {
+            accData.filter((item) => selectBrandState && selectBrandState !== 'Все' ? item['brandName'] === selectBrandState : item).forEach((el) => {
                 currentModelSet.add(el['modelName'])
             })
-           let arrModelSet= [...currentModelSet]
-            let arrSelectModalOptions=[]
-            arrModelSet.forEach((el)=>{
-                arrSelectModalOptions.push({value:el,name:el})
+            let arrModelSet = [...currentModelSet]
+            let arrSelectModalOptions = []
+            arrModelSet.forEach((el) => {
+                arrSelectModalOptions.push({value: el, name: el})
             })
             setSelectModelStateOptions(arrSelectModalOptions)
         }
 
 
-    },[selectBrandState])
+    }, [selectBrandState])
     return (
         <div className="App">
             {
@@ -104,50 +112,58 @@ function App() {
 
             <div className="selectGroup"
                  style={{display: "flex", flexWrap: "wrap", alignItems: 'center', justifyContent: 'space-between'}}>
-                <div>
-                    <MySelect
-                        value={selectBrandState}
-                        onChange={(value) => setSelectBrandState(value)}
-                        defaultValue="Бренд"
-                        options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
+                <div
+                    style={{
+                        display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%',maxWidth:'1520px',
+                        margin:'0 auto'
+                    }}
+                >
+                    <div className={'wwrapper'}>
+                        <MySelect
+                            value={selectBrandState}
+                            onChange={(value) => setSelectBrandState(value)}
+                            defaultValue="Бренд"
+                            options={[{'value': 'Все', name: 'Все'}, ...selectBrandStateOptions]}
 
-                    />
-                    {
-                        selectBrandState && selectBrandState !=='Все'
-                            ?     <MySelect
-                                value={selectModelState}
-                                onChange={(value) => setSelectModelState(value)}
-                                defaultValue="Модель"
-                                options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
-                            />
-                            :''
+                        />
+                        {
+                            selectBrandState && selectBrandState !== 'Все'
+                                ? <MySelect
+                                    value={selectModelState}
+                                    onChange={(value) => setSelectModelState(value)}
+                                    defaultValue="Модель"
+                                    options={[{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
+                                />
+                                : ''
 
-                    }
+                        }
 
-                    <MySelect
-                        value={selectedSort}
-                        onChange={sortPosts}
-                        defaultValue="Сортировка по"
-                        options={[
-                            {value: 'ascendingPrice', name: 'По возрастанию цены'},
-                            {value: 'descendingPrice', name: 'По убыванию цены'}
-                        ]}
-                    />
+                        <MySelect
+                            value={selectedSort}
+                            onChange={sortPosts}
+                            defaultValue="Сортировка "
+                            options={[
+                                {value: 'ascendingPrice', name: 'По возрастанию скидки'},
+                                {value: 'descendingPrice', name: 'По убыванию скидки'}
+                            ]}
+                        />
+                    </div>
+                    <MyButton style={{
+                        display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
+                        pointerEvents: counterSalle ? '' : 'none',
+                        opacity: counterSalle ? '' : '0.2'
+                    }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
                 </div>
-                <MyButton style={{
-                    display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
-                    pointerEvents: counterSalle ? '' : 'none',
-                    opacity: counterSalle ? '' : '0.2'
-                }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
+
             </div>
-            <form onChange={formChange}>
+            <form className={'form-form'} onChange={formChange}>
                 {
                     accData
                         ? <CardsList
                             data={
-                                accData.filter((item) => selectBrandState && selectBrandState!=='Все' ? item['brandName'] === selectBrandState : item)
-                                    .filter((item) => selectModelState && selectModelState!=='Все' ? item['modelName'] === selectModelState : item)
-                        }
+                                accData.filter((item) => selectBrandState && selectBrandState !== 'Все' ? item['brandName'] === selectBrandState : item)
+                                    .filter((item) => selectModelState && selectModelState !== 'Все' ? item['modelName'] === selectModelState : item)
+                            }
                         />
                         : ''
                 }

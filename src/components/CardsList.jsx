@@ -19,6 +19,7 @@ const CardsList = ({cards, data}) => {
                 <CardItem
                     // key={accessoryId.replaceAll('`')}
                     key={index}
+                    index={index}
                     id={accessoryId}
                     imgURL={accessoryPhoto}
                     title={accessoryName}

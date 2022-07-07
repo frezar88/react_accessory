@@ -12,20 +12,22 @@ const CardItem = ({
                       priceDiscount,
                       discount,
                       priceDiscountWork,
-                      priceWork
+                      priceWork,
+                      index,
                   }) => {
     const [checkBoxState, setCheckBoxState] = useState(false);
     const [imgError, setImgError] = useState(false)
     return (
         <div className={s.card}>
             <label htmlFor={id}>
+
                 <div className={[s.card__wrapper, checkBoxState ? s.active : ''].join(' ')}>
                     {
                         checkBoxState
                             ? <CheckCircleIcon fontSize={"large"} style={{
                                 color: "#dc2626",
                                 position: 'absolute',
-                                zIndex: 11111,
+                                zIndex: 1,
                             }}/>
                             : ''
                     }
@@ -87,6 +89,9 @@ const CardItem = ({
 
                             </div>
                         </div>
+                    </div>
+                    <div className={[s.in_bucket, checkBoxState ? s.active : ''].join(' ')}>
+                        <i type={'button'}>{checkBoxState ? 'Добавлено' : 'В корзину'}</i>
                     </div>
                 </div>
             </label>
