@@ -16,7 +16,7 @@ function App() {
 
     const [modalState, setModalState] = useState(false)
 
-//Math.round( accessoryPriceProductDiscount.replace(/\s/g, '')/accessoryPriceProduct.replace(/\s/g, '')*100)
+
 
 
     const sortPosts = (sort) => {
@@ -33,9 +33,6 @@ function App() {
         }));
     }
 
-    useEffect(() => {
-        console.log(modalState)
-    }, [modalState])
 
     useEffect(() => {
         const url = new URL(window.location.href)
