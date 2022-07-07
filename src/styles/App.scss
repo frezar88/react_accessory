@@ -85,4 +85,17 @@ body {
      padding: 20px 5px;
    }
   }
+  .selectGroup {
+    position: unset;
+    z-index: 3;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 3px 10px;
+    margin: 0 auto;
+    box-shadow: 0 0 9px 3px #0000007a;
+  }
+  .form-form{
+    padding-top: 10px !important;
+  }
 }
