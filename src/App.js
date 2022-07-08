@@ -1,7 +1,7 @@
 import './styles/App.scss';
 import CardsList from "./components/CardsList";
 import React, {useEffect, useState} from "react";
-import {getAccessories} from "./axios/requests";
+import {getAccessories, homePageRequest} from "./axios/requests";
 import MyButton from "./components/UI/MyButton";
 import MySelect from "./components/UI/MySelect";
 import MyModal from "./components/UI/MyModal/MyModal";
@@ -45,13 +45,18 @@ function App() {
         const url = new URL(window.location.href)
         const model = url.searchParams.get('model')
         const brand = url.searchParams.get('brand')
-        getAccessories(model, brand).then((data) => {
-            setAccData(data.data['accessories'].sort((a, b) => {
-                let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-                let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
-                return discountB - discountA;
-            }))
-        })
+        if (brand || model){
+            getAccessories(model, brand).then((data) => {
+                setAccData(data.data['accessories'].sort((a, b) => {
+                    let discountA = 100 - +Math.round(a['accessoryPriceProductDiscount'].replace(/\s/g, '') / a['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                    let discountB = 100 - +Math.round(b['accessoryPriceProductDiscount'].replace(/\s/g, '') / b['accessoryPriceProduct'].replace(/\s/g, '') * 100)
+                    return discountB - discountA;
+                }))
+            })
+        }else{
+            homePageRequest().then((data)=>console.log(data))
+        }
+
     }, [])
 
     const collectSelectedAcc = (e) => {
