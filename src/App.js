@@ -5,25 +5,26 @@ import {getAccessories} from "./axios/requests";
 import MyButton from "./components/UI/MyButton";
 import MySelect from "./components/UI/MySelect";
 import MyModal from "./components/UI/MyModal/MyModal";
-
+import {TextField} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ClearIcon from "@material-ui/icons/Clear";
+import SearchIcon from "@material-ui/icons/Search";
 
 function App() {
     const [counterSalle, setCounterSalle] = useState(0)
     const [accData, setAccData] = useState()
     const [selectedSort, setSelectedSort] = useState('');
     const [selectedAcc, setSelectedAcc] = useState([])
-
     const [modalState, setModalState] = useState(false)
-
     const [selectBrandStateOptions, setSelectBrandStateOptions] = useState([])
     const [selectModelStateOptions, setSelectModelStateOptions] = useState([])
-
     const [selectBrandState, setSelectBrandState] = useState()
     const [selectModelState, setSelectModelState] = useState()
-
     const [getParams, setGetParams] = useState({brand: '', model: ''})
-
     const [defaultModelOptions, setDefaultModelOptions] = useState([])
+    const [searchValue, setSearchValue] = useState('')
+
 
 
     const sortPosts = (sort) => {
@@ -50,14 +51,14 @@ function App() {
         let brandSet = new Set()
         getAccessories().then((data) => {
             let defaultModelSet = new Set()
-            let modelOpt =[]
+            let modelOpt = []
             if (brand) {
                 data.data.data.filter((item) => item.brandName.toLowerCase() === brand.toLowerCase())
                     .forEach((el) => {
                         defaultModelSet.add(el['modelName'])
                     })
                 let defaultModelArr = [...defaultModelSet]
-                defaultModelArr.forEach((el)=>{
+                defaultModelArr.forEach((el) => {
                     modelOpt.push({value: el, name: el})
                 })
                 setDefaultModelOptions(modelOpt)
@@ -127,7 +128,7 @@ function App() {
 
     }, [selectBrandState])
     return (
-        <div className="App">
+        <div className="App" style={{position:'relative'}}>
             {
                 modalState
                     ? <MyModal selectedAcc={selectedAcc} modalState={modalState} setState={setModalState}/>
@@ -157,7 +158,7 @@ function App() {
 
                         />
                         {
-                             selectBrandState !== 'Все' || getParams['brand']
+                            selectBrandState !== 'Все' || getParams['brand']
                                 ? <MySelect
                                     value={selectModelState}
                                     onChange={(value) => {
@@ -165,7 +166,10 @@ function App() {
                                         setSelectModelState(value)
                                     }}
                                     defaultValue="Модель"
-                                    options={defaultModelOptions[0] && !selectModelStateOptions[0] ?defaultModelOptions: [{'value': 'Все', name: 'Все'}, ...selectModelStateOptions]}
+                                    options={defaultModelOptions[0] && !selectModelStateOptions[0] ? defaultModelOptions : [{
+                                        'value': 'Все',
+                                        name: 'Все'
+                                    }, ...selectModelStateOptions]}
                                 />
                                 : ''
 
@@ -180,6 +184,30 @@ function App() {
                                 {value: 'descendingPrice', name: 'По убыванию скидки'}
                             ]}
                         />
+                        <FormControl sx={{m: 1, minWidth: 120}} size={"small"}>
+                            <TextField
+                                style={{padding:0}}
+                                value={searchValue}
+                                onChange={(e)=>setSearchValue(e.target.value)}
+                                size={"small"}
+                                label="Поиск"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment>
+                                            {
+                                              searchValue.length
+                                                  ?
+                                                  <ClearIcon style={{cursor:'pointer'}} onClick={(e)=>setSearchValue('')} />
+                                                  :
+                                                <SearchIcon />
+                                            }
+
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        </FormControl>
+
                     </div>
                     <MyButton style={{
                         display: window.innerWidth < 789 && !counterSalle ? 'none' : 'flex',
@@ -198,15 +226,39 @@ function App() {
                                     .filter((item) => selectModelState && selectModelState !== 'Все' ? item['modelName'] === selectModelState : item)
                                     .filter((item) => getParams['model'] ? item['modelName'].toLowerCase() === getParams['model'].toLowerCase() : item)
                                     .filter((item) => getParams['brand'] ? item['brandName'].toLowerCase() === getParams['brand'].toLowerCase() : item)
+                                    .filter((item) =>searchValue.length>=2 ? item['accessoryName'].toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 : item)
                             }
                         />
                         : ''
                 }
-                <div className={'stupid'}>
-                    <h5>Выберите любой из аксессуаров</h5>
-                </div>
 
+                <div className={'stupid'}>
+                    {
+                        accData
+                            ?
+                            accData.filter((item) => selectBrandState && selectBrandState !== 'Все' ? item['brandName'] === selectBrandState : item)
+                                .filter((item) => selectModelState && selectModelState !== 'Все' ? item['modelName'] === selectModelState : item)
+                                .filter((item) => getParams['model'] ? item['modelName'].toLowerCase() === getParams['model'].toLowerCase() : item)
+                                .filter((item) => getParams['brand'] ? item['brandName'].toLowerCase() === getParams['brand'].toLowerCase() : item)
+                                .filter((item) =>searchValue.length>=2 ? item['accessoryName'].toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 : item).length
+                                ?
+                                <h5>Выберите любой из аксессуаров </h5>
+                                :
+                                <h5>Ничего не найдено</h5>
+                            :
+                        ''
+                    }
+
+                </div>
             </form>
+
+            <h5 style={{textAlign:'center'}} >
+                УНП
+                ООО Автопромсервис
+                и номера
+                Renault 527-1111
+                LADA +375291300300
+            </h5>
         </div>
     );
 }

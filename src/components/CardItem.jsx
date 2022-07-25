@@ -90,6 +90,8 @@ const CardItem = ({
                             </div>
                         </div>
                     </div>
+                    <h5 style={{fontSize:8, textAlign:"center",width:'100%',marginTop:10}}>* Цена аксессуаров без установки представлена справочно</h5>
+
                     <div className={[s.in_bucket, checkBoxState ? s.active : ''].join(' ')}>
                         <i type={'button'}>{checkBoxState ? 'Добавлено' : 'В корзину'}</i>
                     </div>
