@@ -5,6 +5,11 @@ import {getAccessories, homePageRequest} from "./axios/requests";
 import MyButton from "./components/UI/MyButton";
 import MySelect from "./components/UI/MySelect";
 import MyModal from "./components/UI/MyModal/MyModal";
+import {TextField} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ClearIcon from "@material-ui/icons/Clear";
+import SearchIcon from "@material-ui/icons/Search";
 
 
 function App() {
@@ -13,8 +18,8 @@ function App() {
     const [selectedSort, setSelectedSort] = useState('');
     const [cardsEdit, setCardsEdit] = useState();
     const [selectedAcc, setSelectedAcc] = useState([])
-
     const [modalState, setModalState] = useState(false)
+    const [searchValue, setSearchValue] = useState('')
 
 
 
@@ -106,6 +111,29 @@ function App() {
                                 {value: 'descendingPrice', name: 'По убыванию цены'},
                             ]}
                         />
+                        <FormControl sx={{m: 1, minWidth: 120}} size={"small"}>
+                            <TextField
+                                style={{padding:0}}
+                                value={searchValue}
+                                onChange={(e)=>setSearchValue(e.target.value)}
+                                size={"small"}
+                                label="Поиск"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment>
+                                            {
+                                                searchValue.length
+                                                    ?
+                                                    <ClearIcon style={{cursor:'pointer'}} onClick={(e)=>setSearchValue('')} />
+                                                    :
+                                                    <SearchIcon />
+                                            }
+
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        </FormControl>
                         <a  href="/all-brand">Другие аксессуары</a>
                     </div>
 
@@ -114,6 +142,7 @@ function App() {
                         pointerEvents: counterSalle ? '' : 'none',
                         opacity: counterSalle ? '' : '0.2'
                     }} onClick={clickMyButton}>Корзина {counterSalle ? '(' + counterSalle + ')' : ''} </MyButton>
+
                 </div>
 
             </div>
@@ -127,14 +156,35 @@ function App() {
             <form className={'form-form'} onChange={formChange}>
                 {
                     accData
-                        ? <CardsList data={cardsEdit ? cardsEdit : accData}/>
+                        ? <CardsList data={cardsEdit
+                            ? cardsEdit.filter((item) =>searchValue.length>=1 ? item['accessoryName'].toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 : item)
+                            : accData.filter((item) =>searchValue.length>=1 ? item['accessoryName'].toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 : item)
+                        }/>
                         : ''
                 }
                 <div className={'stupid'}>
-                    <h5>Выберите любой из аксессуаров</h5>
+                    {
+                        accData
+                            ?
+                            accData.filter((item) =>searchValue.length>=1 ? item['accessoryName'].toLowerCase().indexOf(searchValue.toLowerCase()) !== -1 : item).length
+                                ?
+                                <h5>Выберите любой из аксессуаров </h5>
+                                :
+                                <h5>Ничего не найдено</h5>
+                            :
+                            ''
+                    }
+
                 </div>
 
             </form>
+            <h5 style={{textAlign:'center'}} >
+                УНП
+                ООО Автопромсервис
+                и номера
+                Renault 527-1111
+                LADA +375291300300
+            </h5>
         </div>
     );
 }

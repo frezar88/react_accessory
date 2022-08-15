@@ -48,6 +48,7 @@ body {
 
 .form-form {
   padding-top: 80px;
+  min-height: calc(100vh - 26px);
 }
 
 .wrapper__for_other {
@@ -71,7 +72,7 @@ body {
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 720px) {
   .wrapper__for_other {
     display: grid;
     width: 100%;
